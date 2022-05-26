@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import Alert from "@mui/material/Alert";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -11,7 +13,15 @@ import ListItemText from "@mui/material/ListItemText";
 
 import Typography from "@mui/material/Typography";
 
+import { requestAPI } from "./handler";
+
 import { synaLogo } from "./syna_logo";
+
+let alertMessage = "";
+
+const alertMessageEnterBootloader = "Failed to enter bootloader mode.";
+
+const alertMessageRunApplicationFW = "Failed to run application firmware.";
 
 const TOTAL_WIDTH = 700;
 const WIDTH = TOTAL_WIDTH / 2;
@@ -21,8 +31,59 @@ const camelCaseToTitleCase = (camel: string): string => {
   return title.charAt(0).toUpperCase() + title.slice(1);
 };
 
+const enterBootloader = async (): Promise<any> => {
+  try {
+    return await requestAPI<any>("command?query=enterBootloaderMode");
+  } catch (error) {
+    console.error(
+      `Error - GET /webds/command?query=enterBootloaderMode\n${error}`
+    );
+    return Promise.reject("Failed to enter bootloader mode");
+  }
+};
+
+const runApplicationFW = async (): Promise<any> => {
+  try {
+    return await requestAPI<any>("command?query=runApplicationFirmware");
+  } catch (error) {
+    console.error(
+      `Error - GET /webds/command?query=runApplicationFirmware\n${error}`
+    );
+    return Promise.reject("Failed to run application firmware");
+  }
+};
+
 export const Landing = (props: any): JSX.Element => {
+  const [alert, setAlert] = useState<boolean>(false);
+  const [mode, setMode] = useState<string>("");
   const [partNumber, setPartNumber] = useState<string>("");
+
+  const handleModeButtonClick = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    if (mode === "application") {
+      try {
+        await enterBootloader();
+        setMode("bootloader");
+      } catch (error) {
+        console.error(error);
+        alertMessage = alertMessageEnterBootloader;
+        setAlert(true);
+        return;
+      }
+    } else if (props.identify.mode === "bootloader") {
+      try {
+        await runApplicationFW();
+        setMode("application");
+      } catch (error) {
+        console.error(error);
+        alertMessage = alertMessageRunApplicationFW;
+        setAlert(true);
+        return;
+      }
+    }
+    props.getData();
+  };
 
   const generateIdentifyData = (): JSX.Element[] => {
     const output: JSX.Element[] = [];
@@ -65,13 +126,12 @@ export const Landing = (props: any): JSX.Element => {
   };
 
   const generateModeInfoData = (): JSX.Element[] => {
-    let mode: string = props.identify.mode;
-    mode = mode.charAt(0).toUpperCase() + mode.slice(1);
+    const modeTitle = mode.charAt(0).toUpperCase() + mode.slice(1);
     const output: JSX.Element[] = [];
     output.push(
-      <ListItem key={mode + " Information"} sx={{ padding: "1px 0px" }}>
+      <ListItem key={modeTitle + " Information"} sx={{ padding: "1px 0px" }}>
         <ListItemText
-          primary={mode + " Information"}
+          primary={modeTitle + " Information"}
           primaryTypographyProps={{
             variant: "h5",
             sx: { fontWeight: "bold" }
@@ -99,10 +159,20 @@ export const Landing = (props: any): JSX.Element => {
       .split("-")[0]
       .split(" ")[0];
     setPartNumber(partNumber);
+    setMode(props.identify.mode);
   }, [props.identify]);
 
   return (
     <>
+      {alert ? (
+        <Alert
+          severity="error"
+          onClose={() => setAlert(false)}
+          sx={{ marginBottom: "16px" }}
+        >
+          {alertMessage}
+        </Alert>
+      ) : null}
       <Stack
         spacing={2}
         divider={
@@ -192,12 +262,33 @@ export const Landing = (props: any): JSX.Element => {
         <div
           style={{
             width: TOTAL_WIDTH + "px",
+            position: "relative",
             display: "flex",
             justifyContent: "center"
           }}
         >
           <Button onClick={(event) => props.getData()} sx={{ width: "100px" }}>
             Refresh
+          </Button>
+          <Button
+            variant="text"
+            onClick={(event) => handleModeButtonClick(event)}
+            sx={{
+              position: "absolute",
+              top: "0px",
+              right: "0px",
+              textTransform: "none"
+            }}
+          >
+            {mode === "application" ? (
+              <Typography variant="body2" sx={{ textDecoration: "underline" }}>
+                Bootloader Mode
+              </Typography>
+            ) : (
+              <Typography variant="body2" sx={{ textDecoration: "underline" }}>
+                Application Mode
+              </Typography>
+            )}
           </Button>
         </div>
       </Stack>
