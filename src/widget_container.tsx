@@ -63,6 +63,7 @@ const DeviceInfoContainer = (props: any): JSX.Element => {
 
   const getData = async () => {
     setAlert(false);
+    setInitialized(false);
     let identifyReport: any;
     try {
       identifyReport = await getIdentify();
@@ -71,7 +72,6 @@ const DeviceInfoContainer = (props: any): JSX.Element => {
       console.error(error);
       alertMessage = alertMessageIdentify;
       setAlert(true);
-      setInitialized(false);
       return;
     }
     if (identifyReport.mode === "application") {
@@ -82,7 +82,6 @@ const DeviceInfoContainer = (props: any): JSX.Element => {
         console.error(error);
         alertMessage = alertMessageAppInfo;
         setAlert(true);
-        setInitialized(false);
         return;
       }
     } else if (identifyReport.mode === "bootloader") {
@@ -93,14 +92,12 @@ const DeviceInfoContainer = (props: any): JSX.Element => {
         console.error(error);
         alertMessage = alertMessageBootInfo;
         setAlert(true);
-        setInitialized(false);
         return;
       }
     } else {
       console.error("Unknown firmware mode");
       alertMessage = alertMessageUnknownMode;
       setAlert(true);
-      setInitialized(false);
       return;
     }
     setInitialized(true);
