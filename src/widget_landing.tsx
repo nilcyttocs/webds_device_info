@@ -26,8 +26,11 @@ const alertMessageRunApplicationFW = "Failed to run application firmware.";
 const TOTAL_WIDTH = 700;
 const WIDTH = TOTAL_WIDTH / 2;
 
+const CHIP_WIDTH = 180;
+
 const camelCaseToTitleCase = (camel: string): string => {
   let title = camel.replace(/([a-z])([A-Z])/g, "$1 $2");
+  title = title.replace(/([A-Z])([A-Z])([a-z])/g, "$1 $2$3");
   return title.charAt(0).toUpperCase() + title.slice(1);
 };
 
@@ -196,8 +199,8 @@ export const Landing = (props: any): JSX.Element => {
               <div
                 style={{
                   position: "relative",
-                  width: 180 + "px",
-                  height: 180 + "px",
+                  width: CHIP_WIDTH + "px",
+                  height: CHIP_WIDTH + "px",
                   marginTop: "20px"
                 }}
               >
@@ -229,7 +232,7 @@ export const Landing = (props: any): JSX.Element => {
                     transform: "translate(-50%, -50%)"
                   }}
                 >
-                  <Typography variant="h6" sx={{ color: "white" }}>
+                  <Typography variant="h5" sx={{ color: "white" }}>
                     {partNumber}
                   </Typography>
                 </div>
