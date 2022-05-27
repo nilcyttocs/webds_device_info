@@ -171,7 +171,7 @@ export const Landing = (props: any): JSX.Element => {
         <Alert
           severity="error"
           onClose={() => setAlert(false)}
-          sx={{ marginBottom: "16px" }}
+          sx={{ marginBottom: "16px", whiteSpace: "pre-wrap" }}
         >
           {alertMessage}
         </Alert>
