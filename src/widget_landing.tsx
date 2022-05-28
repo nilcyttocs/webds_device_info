@@ -104,7 +104,9 @@ export const Landing = (props: any): JSX.Element => {
     output.push(
       <ListItem key="partNumber" sx={{ padding: "1px 0px" }}>
         <ListItemText
-          primary={"Part Number: " + props.identify.partNumber}
+          primary={
+            "Part Number: " + props.identify.partNumber.replace(/\0/g, "")
+          }
           primaryTypographyProps={{
             variant: "body1",
             sx: { fontWeight: "bold" }
@@ -115,6 +117,9 @@ export const Landing = (props: any): JSX.Element => {
     for (let [key, value] of Object.entries(props.identify)) {
       if (key === "buildID" || key === "partNumber") {
         continue;
+      }
+      if (typeof value === "string") {
+        value = value.replace(/\0/g, "");
       }
       output.push(
         <ListItem key={key} sx={{ padding: "1px 0px" }}>
@@ -143,6 +148,9 @@ export const Landing = (props: any): JSX.Element => {
       </ListItem>
     );
     for (let [key, value] of Object.entries(props.modeInfo)) {
+      if (typeof value === "string") {
+        value = value.replace(/\0/g, "");
+      }
       output.push(
         <ListItem key={key} sx={{ padding: "1px 0px" }}>
           <ListItemText
