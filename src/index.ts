@@ -4,11 +4,11 @@ import {
   JupyterFrontEndPlugin
 } from "@jupyterlab/application";
 
-import { MainAreaWidget, WidgetTracker } from "@jupyterlab/apputils";
+import { WidgetTracker } from "@jupyterlab/apputils";
 
 import { ILauncher } from "@jupyterlab/launcher";
 
-import { WebDSService } from "@webds/service";
+import { WebDSService, WebDSWidget } from "@webds/service";
 
 import { deviceInfoIcon } from "./icons";
 
@@ -29,7 +29,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
   ) => {
     console.log("JupyterLab extension @webds/device_info is activated!");
 
-    let widget: MainAreaWidget;
+    let widget: WebDSWidget;
     const { commands, shell } = app;
     const command: string = "webds_device_info:open";
     commands.addCommand(command, {
@@ -41,7 +41,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       execute: () => {
         if (!widget || widget.isDisposed) {
           const content = new DeviceInfoWidget(app, service);
-          widget = new MainAreaWidget<DeviceInfoWidget>({ content });
+          widget = new WebDSWidget<DeviceInfoWidget>({ content });
           widget.id = "webds_device_info_widget";
           widget.title.label = "Device Info";
           widget.title.icon = deviceInfoIcon;
@@ -62,7 +62,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       category: "WebDS - Exploration"
     });
 
-    let tracker = new WidgetTracker<MainAreaWidget>({
+    let tracker = new WidgetTracker<WebDSWidget>({
       namespace: "webds_device_info"
     });
     restorer.restore(tracker, {

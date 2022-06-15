@@ -23,14 +23,26 @@ const alertMessageEnterBootloader = "Failed to enter bootloader mode.";
 
 const alertMessageRunApplicationFW = "Failed to run application firmware.";
 
-const TOTAL_WIDTH = 700;
-const WIDTH = TOTAL_WIDTH / 2;
+const L_WIDTH = 350;
+const R_WIDTH = 550;
+const TOTAL_WIDTH = L_WIDTH + R_WIDTH;
 
 const CHIP_WIDTH = 180;
+
+const toHex = (str: string): string => {
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    result += str.charCodeAt(i).toString(16);
+  }
+  return result;
+};
 
 const camelCaseToTitleCase = (camel: string): string => {
   let title = camel.replace(/([a-z])([A-Z])/g, "$1 $2");
   title = title.replace(/([A-Z])([A-Z])([a-z])/g, "$1 $2$3");
+  title = title.replace(/^Id /, "ID ");
+  title = title.replace(/ Id /g, " ID ");
+  title = title.replace(/ Id$/, " ID");
   return title.charAt(0).toUpperCase() + title.slice(1);
 };
 
@@ -151,11 +163,28 @@ export const Landing = (props: any): JSX.Element => {
       if (typeof value === "string") {
         value = value.replace(/\0/g, "");
       }
+      if (key === "customerConfigId") {
+        continue;
+      }
       output.push(
         <ListItem key={key} sx={{ padding: "1px 0px" }}>
           <ListItemText
             primary={camelCaseToTitleCase(key) + ": " + value}
             primaryTypographyProps={{ variant: "body1" }}
+          />
+        </ListItem>
+      );
+    }
+    if (mode === "application") {
+      output.push(
+        <ListItem key="customerConfigId" sx={{ padding: "1px 0px" }}>
+          <ListItemText
+            primary={
+              "Customer Config ID: " + toHex(props.modeInfo.customerConfigId)
+            }
+            primaryTypographyProps={{
+              variant: "body1"
+            }}
           />
         </ListItem>
       );
@@ -199,11 +228,11 @@ export const Landing = (props: any): JSX.Element => {
         >
           <div
             style={{
-              minWidth: WIDTH + "px",
-              maxWidth: WIDTH + "px"
+              minWidth: L_WIDTH + "px",
+              maxWidth: L_WIDTH + "px"
             }}
           >
-            <div style={{ width: "50%", margin: "0 auto" }}>
+            <div style={{ paddingLeft: "60px" }}>
               <div
                 style={{
                   position: "relative",
@@ -245,20 +274,19 @@ export const Landing = (props: any): JSX.Element => {
                   </Typography>
                 </div>
               </div>
-            </div>
-            <div
-              style={{
-                paddingTop: "20px",
-                paddingLeft: "60px"
-              }}
-            >
-              <List dense>{generateIdentifyData()}</List>
+              <div
+                style={{
+                  paddingTop: "20px"
+                }}
+              >
+                <List dense>{generateIdentifyData()}</List>
+              </div>
             </div>
           </div>
           <div
             style={{
-              minWidth: WIDTH + "px",
-              maxWidth: WIDTH + "px"
+              minWidth: R_WIDTH + "px",
+              maxWidth: R_WIDTH + "px"
             }}
           >
             <div
@@ -273,22 +301,30 @@ export const Landing = (props: any): JSX.Element => {
         <div
           style={{
             width: TOTAL_WIDTH + "px",
-            position: "relative",
-            display: "flex",
-            justifyContent: "center"
+            position: "relative"
           }}
         >
-          <Button onClick={(event) => props.getData()} sx={{ width: "100px" }}>
-            Refresh
-          </Button>
+          <div
+            style={{
+              width: L_WIDTH * 2 + "px",
+              display: "flex",
+              justifyContent: "center"
+            }}
+          >
+            <Button
+              onClick={(event) => props.getData()}
+              sx={{ width: "100px" }}
+            >
+              Refresh
+            </Button>
+          </div>
           <Button
             variant="text"
             onClick={(event) => handleModeButtonClick(event)}
             sx={{
               position: "absolute",
               top: "0px",
-              right: "0px",
-              textTransform: "none"
+              right: "0px"
             }}
           >
             {mode === "application" ? (
