@@ -79,7 +79,6 @@ export const Landing = (props: any): JSX.Element => {
     if (mode === "application") {
       try {
         await enterBootloader();
-        setMode("bootloader");
       } catch (error) {
         console.error(error);
         alertMessage = alertMessageEnterBootloader;
@@ -89,7 +88,6 @@ export const Landing = (props: any): JSX.Element => {
     } else if (props.identify.mode === "bootloader") {
       try {
         await runApplicationFW();
-        setMode("application");
       } catch (error) {
         console.error(error);
         alertMessage = alertMessageRunApplicationFW;
