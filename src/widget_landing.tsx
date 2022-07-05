@@ -47,23 +47,31 @@ const camelCaseToTitleCase = (camel: string): string => {
 };
 
 const enterBootloader = async (): Promise<any> => {
+  const dataToSend: any = {
+    command: "enterBootloaderMode"
+  };
   try {
-    return await requestAPI<any>("command?query=enterBootloaderMode");
+    return await requestAPI<any>("command", {
+      body: JSON.stringify(dataToSend),
+      method: "POST"
+    });
   } catch (error) {
-    console.error(
-      `Error - GET /webds/command?query=enterBootloaderMode\n${error}`
-    );
+    console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
     return Promise.reject("Failed to enter bootloader mode");
   }
 };
 
 const runApplicationFW = async (): Promise<any> => {
+  const dataToSend: any = {
+    command: "runApplicationFirmware"
+  };
   try {
-    return await requestAPI<any>("command?query=runApplicationFirmware");
+    return await requestAPI<any>("command", {
+      body: JSON.stringify(dataToSend),
+      method: "POST"
+    });
   } catch (error) {
-    console.error(
-      `Error - GET /webds/command?query=runApplicationFirmware\n${error}`
-    );
+    console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
     return Promise.reject("Failed to run application firmware");
   }
 };

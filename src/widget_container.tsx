@@ -29,28 +29,46 @@ const alertMessageBootInfo = "Failed to read bootloader info from device.";
 const alertMessageUnknownMode = "Unknown firmware mode.";
 
 const getIdentify = async (): Promise<any> => {
+  const dataToSend: any = {
+    command: "identify"
+  };
   try {
-    return await requestAPI<any>("command?query=identify");
+    return await requestAPI<any>("command", {
+      body: JSON.stringify(dataToSend),
+      method: "POST"
+    });
   } catch (error) {
-    console.error(`Error - GET /webds/command?query=identify\n${error}`);
+    console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
     return Promise.reject("Failed to get Identify report");
   }
 };
 
 const getAppInfo = async (): Promise<any> => {
+  const dataToSend: any = {
+    command: "getAppInfo"
+  };
   try {
-    return await requestAPI<any>("command?query=getAppInfo");
+    return await requestAPI<any>("command", {
+      body: JSON.stringify(dataToSend),
+      method: "POST"
+    });
   } catch (error) {
-    console.error(`Error - GET /webds/command?query=getAppInfo\n${error}`);
+    console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
     return Promise.reject("Failed to get Application Info");
   }
 };
 
 const getBootInfo = async (): Promise<any> => {
+  const dataToSend: any = {
+    command: "getBootInfo"
+  };
   try {
-    return await requestAPI<any>("command?query=getBootInfo");
+    return await requestAPI<any>("command", {
+      body: JSON.stringify(dataToSend),
+      method: "POST"
+    });
   } catch (error) {
-    console.error(`Error - GET /webds/command?query=getBootInfo\n${error}`);
+    console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
     return Promise.reject("Failed to get Bootloader Info");
   }
 };
