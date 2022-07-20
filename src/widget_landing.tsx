@@ -17,17 +17,22 @@ import { requestAPI } from "./handler";
 
 import { synaLogo } from "./syna_logo";
 
+const WIDTH = 800;
+const HEIGHT_TITLE = 70;
+const HEIGHT_CONTENT = 450;
+const HEIGHT_CONTROLS = 120;
+
+const L_WIDTH = 250;
+const R_WIDTH = 450;
+const CHIP_WIDTH = 180;
+
+const showHelp = false;
+
 let alertMessage = "";
 
 const alertMessageEnterBootloader = "Failed to enter bootloader mode.";
 
 const alertMessageRunApplicationFW = "Failed to run application firmware.";
-
-const L_WIDTH = 350;
-const R_WIDTH = 550;
-const TOTAL_WIDTH = L_WIDTH + R_WIDTH;
-
-const CHIP_WIDTH = 180;
 
 const toHex = (str: string): string => {
   let result = "";
@@ -47,31 +52,23 @@ const camelCaseToTitleCase = (camel: string): string => {
 };
 
 const enterBootloader = async (): Promise<any> => {
-  const dataToSend: any = {
-    command: "enterBootloaderMode"
-  };
   try {
-    return await requestAPI<any>("command", {
-      body: JSON.stringify(dataToSend),
-      method: "POST"
-    });
+    return await requestAPI<any>("command?query=enterBootloaderMode");
   } catch (error) {
-    console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
+    console.error(
+      `Error - GET /webds/command?query=enterBootloaderMode\n${error}`
+    );
     return Promise.reject("Failed to enter bootloader mode");
   }
 };
 
 const runApplicationFW = async (): Promise<any> => {
-  const dataToSend: any = {
-    command: "runApplicationFirmware"
-  };
   try {
-    return await requestAPI<any>("command", {
-      body: JSON.stringify(dataToSend),
-      method: "POST"
-    });
+    return await requestAPI<any>("command?query=runApplicationFirmware");
   } catch (error) {
-    console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
+    console.error(
+      `Error - GET /webds/command?query=runApplicationFirmware\n${error}`
+    );
     return Promise.reject("Failed to run application firmware");
   }
 };
@@ -81,9 +78,10 @@ export const Landing = (props: any): JSX.Element => {
   const [mode, setMode] = useState<string>("");
   const [partNumber, setPartNumber] = useState<string>("");
 
-  const handleModeButtonClick = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const modeTitle =
+    mode.charAt(0).toUpperCase() + mode.slice(1) + " Information";
+
+  const handleModeButtonClick = async () => {
     if (mode === "application") {
       try {
         await enterBootloader();
@@ -152,19 +150,7 @@ export const Landing = (props: any): JSX.Element => {
   };
 
   const generateModeInfoData = (): JSX.Element[] => {
-    const modeTitle = mode.charAt(0).toUpperCase() + mode.slice(1);
     const output: JSX.Element[] = [];
-    output.push(
-      <ListItem key={modeTitle + " Information"} sx={{ padding: "1px 0px" }}>
-        <ListItemText
-          primary={modeTitle + " Information"}
-          primaryTypographyProps={{
-            variant: "h5",
-            sx: { fontWeight: "bold" }
-          }}
-        />
-      </ListItem>
-    );
     for (let [key, value] of Object.entries(props.modeInfo)) {
       if (typeof value === "string") {
         value = value.replace(/\0/g, "");
@@ -219,131 +205,177 @@ export const Landing = (props: any): JSX.Element => {
           {alertMessage}
         </Alert>
       ) : null}
-      <Stack
-        spacing={2}
-        divider={
-          <Divider
-            orientation="horizontal"
-            sx={{ width: TOTAL_WIDTH + "px" }}
-          />
-        }
-      >
-        <Stack
-          direction="row"
-          divider={<Divider orientation="vertical" flexItem />}
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            width: WIDTH + "px",
+            height: HEIGHT_TITLE + "px",
+            position: "relative",
+            bgcolor: "section.main"
+          }}
         >
-          <div
-            style={{
-              minWidth: L_WIDTH + "px",
-              maxWidth: L_WIDTH + "px"
+          <Typography
+            variant="h5"
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)"
             }}
           >
-            <div style={{ paddingLeft: "60px" }}>
-              <div
-                style={{
-                  position: "relative",
-                  width: CHIP_WIDTH + "px",
-                  height: CHIP_WIDTH + "px",
-                  marginTop: "20px"
-                }}
-              >
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    border: 1,
-                    borderRadius: 2,
-                    borderColor: "gray",
-                    backgroundColor: "black"
-                  }}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "35%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)"
-                  }}
-                >
-                  {synaLogo}
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "75%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)"
-                  }}
-                >
-                  <Typography variant="h5" sx={{ color: "white" }}>
-                    {partNumber}
-                  </Typography>
-                </div>
-              </div>
-              <div
-                style={{
-                  paddingTop: "20px"
-                }}
-              >
-                <List dense>{generateIdentifyData()}</List>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              minWidth: R_WIDTH + "px",
-              maxWidth: R_WIDTH + "px"
-            }}
-          >
-            <div
-              style={{
-                paddingLeft: "60px"
+            {modeTitle}
+          </Typography>
+          {showHelp && (
+            <Button
+              variant="text"
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "16px",
+                transform: "translate(0%, -50%)"
               }}
             >
-              <List dense>{generateModeInfoData()}</List>
-            </div>
-          </div>
-        </Stack>
-        <div
-          style={{
-            width: TOTAL_WIDTH + "px",
-            position: "relative"
+              <Typography variant="body2" sx={{ textDecoration: "underline" }}>
+                Help
+              </Typography>
+            </Button>
+          )}
+        </Box>
+        <Box
+          sx={{
+            width: WIDTH + "px",
+            minHeight: HEIGHT_CONTENT + "px",
+            position: "relative",
+            bgcolor: "section.main",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
           <div
             style={{
-              width: L_WIDTH * 2 + "px",
-              display: "flex",
-              justifyContent: "center"
+              margin: "24px"
             }}
           >
-            <Button
-              onClick={(event) => props.getData()}
-              sx={{ width: "100px" }}
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem />}
             >
+              <div
+                style={{
+                  width: L_WIDTH + "px"
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: CHIP_WIDTH + "px",
+                    height: CHIP_WIDTH + "px",
+                    marginTop: "20px"
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      border: 1,
+                      borderRadius: 2,
+                      borderColor: "gray",
+                      backgroundColor: "black"
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "35%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)"
+                    }}
+                  >
+                    {synaLogo}
+                  </div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "75%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)"
+                    }}
+                  >
+                    <Typography variant="h5" sx={{ color: "white" }}>
+                      {partNumber}
+                    </Typography>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    paddingTop: "20px"
+                  }}
+                >
+                  <List dense>{generateIdentifyData()}</List>
+                </div>
+              </div>
+              <div
+                style={{
+                  width: R_WIDTH + "px"
+                }}
+              >
+                <div style={{ paddingLeft: "50px" }}>
+                  <List dense>{generateModeInfoData()}</List>
+                </div>
+              </div>
+            </Stack>
+          </div>
+        </Box>
+        <Box
+          sx={{
+            width: WIDTH + "px",
+            minHeight: HEIGHT_CONTROLS + "px",
+            position: "relative",
+            bgcolor: "section.main",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <div
+            style={{
+              margin: "24px"
+            }}
+          >
+            <Button onClick={() => props.getData()} sx={{ width: "200px" }}>
               Refresh
             </Button>
+            <Button
+              variant="text"
+              onClick={() => handleModeButtonClick()}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                right: "24px",
+                transform: "translate(0%, -50%)"
+              }}
+            >
+              {mode === "application" ? (
+                <Typography
+                  variant="body2"
+                  sx={{ textDecoration: "underline" }}
+                >
+                  Bootloader Mode
+                </Typography>
+              ) : (
+                <Typography
+                  variant="body2"
+                  sx={{ textDecoration: "underline" }}
+                >
+                  Application Mode
+                </Typography>
+              )}
+            </Button>
           </div>
-          <Button
-            variant="text"
-            onClick={(event) => handleModeButtonClick(event)}
-            sx={{
-              position: "absolute",
-              top: "0px",
-              right: "0px"
-            }}
-          >
-            {mode === "application" ? (
-              <Typography variant="body2" sx={{ textDecoration: "underline" }}>
-                Bootloader Mode
-              </Typography>
-            ) : (
-              <Typography variant="body2" sx={{ textDecoration: "underline" }}>
-                Application Mode
-              </Typography>
-            )}
-          </Button>
-        </div>
+        </Box>
       </Stack>
     </>
   );
