@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import { JupyterFrontEnd } from "@jupyterlab/application";
-
 import { ReactWidget } from "@jupyterlab/apputils";
 
 import Alert from "@mui/material/Alert";
@@ -179,19 +177,17 @@ const DeviceInfoContainer = (props: any): JSX.Element => {
 };
 
 export class DeviceInfoWidget extends ReactWidget {
-  frontend: JupyterFrontEnd | null = null;
   service: WebDSService | null = null;
 
-  constructor(app: JupyterFrontEnd, service: WebDSService) {
+  constructor(service: WebDSService) {
     super();
-    this.frontend = app;
     this.service = service;
   }
 
   render(): JSX.Element {
     return (
       <div className="jp-webds-widget">
-        <DeviceInfoContainer frontend={this.frontend} service={this.service} />
+        <DeviceInfoContainer service={this.service} />
       </div>
     );
   }

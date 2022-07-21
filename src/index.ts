@@ -14,6 +14,15 @@ import { deviceInfoIcon } from "./icons";
 
 import { DeviceInfoWidget } from "./widget_container";
 
+namespace Attributes {
+  export const command = "webds_device_info:open";
+  export const id = "webds_device_info_widget";
+  export const label = "Device Info";
+  export const caption = "Device Info";
+  export const category = "Touch - Assessment";
+  export const rank = 40;
+}
+
 /**
  * Initialization data for the @webds/device_info extension.
  */
@@ -31,19 +40,19 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     let widget: WebDSWidget;
     const { commands, shell } = app;
-    const command: string = "webds_device_info:open";
+    const command = Attributes.command;
     commands.addCommand(command, {
-      label: "Device Info",
-      caption: "Device Info",
+      label: Attributes.label,
+      caption: Attributes.caption,
       icon: (args: { [x: string]: any }) => {
         return args["isLauncher"] ? deviceInfoIcon : undefined;
       },
       execute: () => {
         if (!widget || widget.isDisposed) {
-          const content = new DeviceInfoWidget(app, service);
+          const content = new DeviceInfoWidget(service);
           widget = new WebDSWidget<DeviceInfoWidget>({ content });
-          widget.id = "webds_device_info_widget";
-          widget.title.label = "Device Info";
+          widget.id = Attributes.id;
+          widget.title.label = Attributes.label;
           widget.title.icon = deviceInfoIcon;
           widget.title.closable = true;
         }
@@ -59,15 +68,16 @@ const plugin: JupyterFrontEndPlugin<void> = {
     launcher.add({
       command,
       args: { isLauncher: true },
-      category: "WebDS - Exploration"
+      category: Attributes.category,
+      rank: Attributes.rank
     });
 
     let tracker = new WidgetTracker<WebDSWidget>({
-      namespace: "webds_device_info"
+      namespace: Attributes.id
     });
     restorer.restore(tracker, {
       command,
-      name: () => "webds_device_info"
+      name: () => Attributes.id
     });
   }
 };
