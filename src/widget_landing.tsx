@@ -345,7 +345,7 @@ export const Landing = (props: any): JSX.Element => {
               margin: "24px"
             }}
           >
-            <Button onClick={() => props.getData()} sx={{ width: "200px" }}>
+            <Button onClick={() => props.getData()} sx={{ width: "150px" }}>
               Refresh
             </Button>
             <Button
