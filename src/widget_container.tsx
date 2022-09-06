@@ -4,8 +4,6 @@ import { ReactWidget } from "@jupyterlab/apputils";
 
 import Alert from "@mui/material/Alert";
 
-import Button from "@mui/material/Button";
-
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { ThemeProvider } from "@mui/material/styles";
@@ -126,53 +124,40 @@ const DeviceInfoContainer = (props: any): JSX.Element => {
   const webdsTheme = props.service.ui.getWebDSTheme();
 
   return (
-    <div className="jp-webds-widget-body">
+    <>
       <ThemeProvider theme={webdsTheme}>
-        {initialized ? (
-          <Landing identify={identify} modeInfo={modeInfo} getData={getData} />
-        ) : (
-          <>
-            {alert ? (
-              <>
-                <Alert
-                  severity="error"
-                  onClose={() => setAlert(false)}
-                  sx={{ whiteSpace: "pre-wrap" }}
-                >
-                  {alertMessage}
-                </Alert>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)"
-                  }}
-                >
-                  <Button
-                    onClick={(event) => getData()}
-                    sx={{ width: "100px" }}
-                  >
-                    Refresh
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)"
-                }}
-              >
-                <CircularProgress color="primary" />
-              </div>
-            )}
-          </>
+        <div className="jp-webds-widget-body">
+          {alert && (
+            <Alert
+              severity="error"
+              onClose={() => setAlert(false)}
+              sx={{ whiteSpace: "pre-wrap" }}
+            >
+              {alertMessage}
+            </Alert>
+          )}
+          {initialized && (
+            <Landing
+              identify={identify}
+              modeInfo={modeInfo}
+              getData={getData}
+            />
+          )}
+        </div>
+        {!initialized && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)"
+            }}
+          >
+            <CircularProgress color="primary" />
+          </div>
         )}
       </ThemeProvider>
-    </div>
+    </>
   );
 };
 
