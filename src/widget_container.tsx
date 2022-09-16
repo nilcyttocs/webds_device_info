@@ -141,6 +141,7 @@ const DeviceInfoContainer = (props: any): JSX.Element => {
               identify={identify}
               modeInfo={modeInfo}
               getData={getData}
+              external={props.service.pinormos.isExternal()}
             />
           )}
         </div>

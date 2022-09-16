@@ -26,6 +26,9 @@ const L_WIDTH = 250;
 const R_WIDTH = 450;
 const CHIP_WIDTH = 180;
 
+const PACKRAT_LINK =
+  "https://packrat.synaptics.com/packrat/view.cgi?packrat_id=";
+
 const showHelp = false;
 
 let alertMessage = "";
@@ -102,6 +105,10 @@ export const Landing = (props: any): JSX.Element => {
       }
     }
     props.getData();
+  };
+
+  const handlePackratButtonClick = () => {
+    window.open(PACKRAT_LINK + props.identify.buildID, "_blank")?.focus();
   };
 
   const generateIdentifyData = (): JSX.Element[] => {
@@ -348,6 +355,25 @@ export const Landing = (props: any): JSX.Element => {
             <Button onClick={() => props.getData()} sx={{ width: "150px" }}>
               Refresh
             </Button>
+            {!props.external && (
+              <Button
+                variant="text"
+                onClick={() => handlePackratButtonClick()}
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "24px",
+                  transform: "translate(0%, -50%)"
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ textDecoration: "underline" }}
+                >
+                  Packrat
+                </Typography>
+              </Button>
+            )}
             <Button
               variant="text"
               onClick={() => handleModeButtonClick()}
