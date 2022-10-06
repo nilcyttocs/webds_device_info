@@ -20,7 +20,7 @@ namespace Attributes {
   export const label = "Device Info";
   export const caption = "Device Info";
   export const category = "Touch - Assessment";
-  export const rank = 40;
+  export const rank = 50;
 }
 
 /**
@@ -64,8 +64,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
         if (!widget.isAttached) shell.add(widget, "main");
 
         shell.activateById(widget.id);
-
-        widget.setShadows();
       }
     });
 
