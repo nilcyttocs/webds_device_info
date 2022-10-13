@@ -2,7 +2,7 @@ import React from "react";
 
 import SvgIcon from "@mui/material/SvgIcon";
 
-export const synaLogo: JSX.Element = (
+export const SynaLogo: JSX.Element = (
   <SvgIcon style={{ fontSize: 75 }} viewBox="0 0 47 56">
     <image
       id="image0"
@@ -65,3 +65,5 @@ JKCdXAAAAABJRU5ErkJggg=="
     />
   </SvgIcon>
 );
+
+export default SynaLogo;

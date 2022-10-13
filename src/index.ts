@@ -12,7 +12,7 @@ import { WebDSService, WebDSWidget } from "@webds/service";
 
 import { deviceInfoIcon } from "./icons";
 
-import { DeviceInfoWidget } from "./widget_container";
+import DeviceInfoWidget from "./widget/DeviceInfoWidget";
 
 namespace Attributes {
   export const command = "webds_device_info:open";

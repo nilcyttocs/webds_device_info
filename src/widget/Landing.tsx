@@ -13,9 +13,9 @@ import ListItemText from "@mui/material/ListItemText";
 
 import Typography from "@mui/material/Typography";
 
-import { requestAPI } from "./handler";
+import SynaLogo from "./SynaLogo";
 
-import { synaLogo } from "./syna_logo";
+import { requestAPI } from "../handler";
 
 const WIDTH = 800;
 const HEIGHT_TITLE = 70;
@@ -300,7 +300,7 @@ export const Landing = (props: any): JSX.Element => {
                       transform: "translate(-50%, -50%)"
                     }}
                   >
-                    {synaLogo}
+                    {SynaLogo}
                   </div>
                   <div
                     style={{
@@ -406,3 +406,5 @@ export const Landing = (props: any): JSX.Element => {
     </>
   );
 };
+
+export default Landing;
