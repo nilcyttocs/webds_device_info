@@ -218,7 +218,7 @@ export const Landing = (props: any): JSX.Element => {
             width: WIDTH + "px",
             height: HEIGHT_TITLE + "px",
             position: "relative",
-            bgcolor: "section.main"
+            bgcolor: "section.background"
           }}
         >
           <Typography
@@ -242,9 +242,7 @@ export const Landing = (props: any): JSX.Element => {
                 transform: "translate(0%, -50%)"
               }}
             >
-              <Typography variant="body2" sx={{ textDecoration: "underline" }}>
-                Help
-              </Typography>
+              <Typography variant="underline">Help</Typography>
             </Button>
           )}
         </Box>
@@ -253,7 +251,7 @@ export const Landing = (props: any): JSX.Element => {
             width: WIDTH + "px",
             minHeight: HEIGHT_CONTENT + "px",
             position: "relative",
-            bgcolor: "section.main",
+            bgcolor: "section.background",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -340,7 +338,7 @@ export const Landing = (props: any): JSX.Element => {
             width: WIDTH + "px",
             minHeight: HEIGHT_CONTROLS + "px",
             position: "relative",
-            bgcolor: "section.main",
+            bgcolor: "section.background",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -366,12 +364,7 @@ export const Landing = (props: any): JSX.Element => {
                   transform: "translate(0%, -50%)"
                 }}
               >
-                <Typography
-                  variant="body2"
-                  sx={{ textDecoration: "underline" }}
-                >
-                  Packrat
-                </Typography>
+                <Typography variant="underline">Packrat</Typography>
               </Button>
             )}
             <Button
@@ -385,19 +378,9 @@ export const Landing = (props: any): JSX.Element => {
               }}
             >
               {mode === "application" ? (
-                <Typography
-                  variant="body2"
-                  sx={{ textDecoration: "underline" }}
-                >
-                  Bootloader Mode
-                </Typography>
+                <Typography variant="underline">Bootloader Mode</Typography>
               ) : (
-                <Typography
-                  variant="body2"
-                  sx={{ textDecoration: "underline" }}
-                >
-                  Application Mode
-                </Typography>
+                <Typography variant="underline">Application Mode</Typography>
               )}
             </Button>
           </div>
