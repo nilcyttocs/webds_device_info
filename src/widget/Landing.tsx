@@ -15,21 +15,23 @@ import Typography from "@mui/material/Typography";
 
 import SynaLogo from "./SynaLogo";
 
+import { Canvas } from "./mui_extensions/Canvas";
+import { Content } from "./mui_extensions/Content";
+import { Controls } from "./mui_extensions/Controls";
+import {
+  CANVAS_ATTRS,
+  ContentAttrs,
+  getContentAttrs
+} from "./mui_extensions/constants";
+
 import { requestAPI } from "../handler";
 
-const WIDTH = 800;
-const HEIGHT_TITLE = 70;
-const HEIGHT_CONTENT = 450;
-const HEIGHT_CONTROLS = 120;
+const contentAttrs: ContentAttrs = getContentAttrs();
 
-const L_WIDTH = 250;
-const R_WIDTH = 450;
 const CHIP_WIDTH = 180;
 
 const PACKRAT_LINK =
   "https://packrat.synaptics.com/packrat/view.cgi?packrat_id=";
-
-const showHelp = false;
 
 let alertMessage = "";
 
@@ -207,77 +209,43 @@ export const Landing = (props: any): JSX.Element => {
         <Alert
           severity="error"
           onClose={() => setAlert(false)}
-          sx={{ marginBottom: "16px", whiteSpace: "pre-wrap" }}
+          sx={{ whiteSpace: "pre-wrap" }}
         >
           {alertMessage}
         </Alert>
       ) : null}
-      <Stack spacing={2}>
-        <Box
-          sx={{
-            width: WIDTH + "px",
-            height: HEIGHT_TITLE + "px",
-            position: "relative",
-            bgcolor: "section.background"
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)"
-            }}
+      <Canvas title={modeTitle}>
+        <Content>
+          <Stack
+            spacing={contentAttrs.PANEL_SPACING}
+            direction="row"
+            divider={
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{
+                  minHeight:
+                    CANVAS_ATTRS.MIN_HEIGHT_CONTENT -
+                    CANVAS_ATTRS.PADDING * 2 +
+                    "px"
+                }}
+              />
+            }
           >
-            {modeTitle}
-          </Typography>
-          {showHelp && (
-            <Button
-              variant="text"
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "16px",
-                transform: "translate(0%, -50%)"
+            <div
+              style={{
+                width: contentAttrs.PANEL_WIDTH + "px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
               }}
             >
-              <Typography variant="underline">Help</Typography>
-            </Button>
-          )}
-        </Box>
-        <Box
-          sx={{
-            width: WIDTH + "px",
-            minHeight: HEIGHT_CONTENT + "px",
-            position: "relative",
-            bgcolor: "section.background",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <div
-            style={{
-              margin: "24px"
-            }}
-          >
-            <Stack
-              direction="row"
-              divider={<Divider orientation="vertical" flexItem />}
-            >
-              <div
-                style={{
-                  width: L_WIDTH + "px"
-                }}
-              >
+              <Stack spacing={2} direction="column" alignItems="left">
                 <div
                   style={{
-                    position: "relative",
                     width: CHIP_WIDTH + "px",
                     height: CHIP_WIDTH + "px",
-                    marginTop: "20px"
+                    position: "relative"
                   }}
                 >
                   <Box
@@ -285,7 +253,7 @@ export const Landing = (props: any): JSX.Element => {
                       width: "100%",
                       height: "100%",
                       border: 1,
-                      borderRadius: 2,
+                      borderRadius: 3,
                       borderColor: "gray",
                       backgroundColor: "black"
                     }}
@@ -313,79 +281,66 @@ export const Landing = (props: any): JSX.Element => {
                     </Typography>
                   </div>
                 </div>
-                <div
-                  style={{
-                    paddingTop: "20px"
-                  }}
-                >
-                  <List dense>{generateIdentifyData()}</List>
-                </div>
-              </div>
-              <div
-                style={{
-                  width: R_WIDTH + "px"
+                <List>{generateIdentifyData()}</List>
+              </Stack>
+            </div>
+            <div style={{ width: contentAttrs.PANEL_WIDTH + "px" }}>
+              <List
+                sx={{
+                  padding: "0px",
+                  "& .MuiListItemText-root": {
+                    marginTop: "0px"
+                  }
                 }}
               >
-                <div style={{ paddingLeft: "50px" }}>
-                  <List dense>{generateModeInfoData()}</List>
-                </div>
-              </div>
-            </Stack>
-          </div>
-        </Box>
-        <Box
+                {generateModeInfoData()}
+              </List>
+            </div>
+          </Stack>
+        </Content>
+        <Controls
           sx={{
-            width: WIDTH + "px",
-            minHeight: HEIGHT_CONTROLS + "px",
-            position: "relative",
-            bgcolor: "section.background",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center"
           }}
         >
-          <div
-            style={{
-              margin: "24px"
-            }}
-          >
-            <Button onClick={() => props.getData()} sx={{ width: "150px" }}>
-              Refresh
-            </Button>
-            {!props.external && (
-              <Button
-                variant="text"
-                onClick={() => handlePackratButtonClick()}
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "24px",
-                  transform: "translate(0%, -50%)"
-                }}
-              >
-                <Typography variant="underline">Packrat</Typography>
-              </Button>
-            )}
+          <Button onClick={() => props.getData()} sx={{ width: "150px" }}>
+            Refresh
+          </Button>
+          {!props.external && (
             <Button
               variant="text"
-              onClick={() => handleModeButtonClick()}
+              onClick={() => handlePackratButtonClick()}
               sx={{
                 position: "absolute",
                 top: "50%",
-                right: "24px",
+                left: "24px",
                 transform: "translate(0%, -50%)"
               }}
             >
-              {mode === "application" ? (
-                <Typography variant="underline">Bootloader Mode</Typography>
-              ) : (
-                <Typography variant="underline">Application Mode</Typography>
-              )}
+              <Typography variant="underline">Packrat</Typography>
             </Button>
-          </div>
-        </Box>
-      </Stack>
+          )}
+          <Button
+            variant="text"
+            onClick={() => handleModeButtonClick()}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              right: "24px",
+              transform: "translate(0%, -50%)"
+            }}
+          >
+            {mode === "application" ? (
+              <Typography variant="underline">Bootloader Mode</Typography>
+            ) : (
+              <Typography variant="underline">Application Mode</Typography>
+            )}
+          </Button>
+        </Controls>
+      </Canvas>
     </>
   );
 };
