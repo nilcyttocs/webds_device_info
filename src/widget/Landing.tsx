@@ -15,6 +15,8 @@ import Typography from "@mui/material/Typography";
 
 import SynaLogo from "./SynaLogo";
 
+import { WIDTH, CHIP_WIDTH } from "./constants";
+
 import { Canvas } from "./mui_extensions/Canvas";
 import { Content } from "./mui_extensions/Content";
 import { Controls } from "./mui_extensions/Controls";
@@ -26,9 +28,7 @@ import {
 
 import { requestAPI } from "../handler";
 
-const contentAttrs: ContentAttrs = getContentAttrs();
-
-const CHIP_WIDTH = 180;
+const contentAttrs: ContentAttrs = getContentAttrs(WIDTH);
 
 const PACKRAT_LINK =
   "https://packrat.synaptics.com/packrat/view.cgi?packrat_id=";
@@ -214,7 +214,7 @@ export const Landing = (props: any): JSX.Element => {
           {alertMessage}
         </Alert>
       ) : null}
-      <Canvas title={modeTitle}>
+      <Canvas title={modeTitle} width={WIDTH}>
         <Content>
           <Stack
             spacing={contentAttrs.PANEL_SPACING}
