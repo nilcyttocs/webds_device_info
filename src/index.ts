@@ -20,7 +20,7 @@ namespace Attributes {
   export const label = "Device Info";
   export const caption = "Device Info";
   export const category = "Touch - Assessment";
-  export const rank = 50;
+  export const rank = 60;
 }
 
 /**
