@@ -8,17 +8,16 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import Landing from "./Landing";
 
+import {
+  ALERT_MESSAGE_IDENTIFY,
+  ALERT_MESSAGE_APP_INFO,
+  ALERT_MESSAGE_BOOT_INFO,
+  ALERT_MESSAGE_UNKNOWN_MODE
+} from "./constants";
+
 import { requestAPI } from "../handler";
 
 let alertMessage = "";
-
-const alertMessageIdentify = "Failed to read identify report from device.";
-
-const alertMessageAppInfo = "Failed to read application info from device.";
-
-const alertMessageBootInfo = "Failed to read bootloader info from device.";
-
-const alertMessageUnknownMode = "Unknown firmware mode.";
 
 const getIdentify = async (): Promise<any> => {
   const dataToSend: any = {
@@ -71,6 +70,11 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
   const [identify, setIdentify] = useState<any>({});
   const [modeInfo, setModeInfo] = useState<any>({});
 
+  const showAlert = (message: string) => {
+    alertMessage = message;
+    setAlert(true);
+  };
+
   const getData = async () => {
     setAlert(false);
     setInitialized(false);
@@ -80,8 +84,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
       setIdentify(identifyReport);
     } catch (error) {
       console.error(error);
-      alertMessage = alertMessageIdentify;
-      setAlert(true);
+      showAlert(ALERT_MESSAGE_IDENTIFY);
       return;
     }
     if (identifyReport.mode === "application") {
@@ -90,8 +93,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
         setModeInfo(info);
       } catch (error) {
         console.error(error);
-        alertMessage = alertMessageAppInfo;
-        setAlert(true);
+        showAlert(ALERT_MESSAGE_APP_INFO);
         return;
       }
     } else if (identifyReport.mode === "bootloader") {
@@ -100,14 +102,12 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
         setModeInfo(info);
       } catch (error) {
         console.error(error);
-        alertMessage = alertMessageBootInfo;
-        setAlert(true);
+        showAlert(ALERT_MESSAGE_BOOT_INFO);
         return;
       }
     } else {
       console.error("Unknown firmware mode");
-      alertMessage = alertMessageUnknownMode;
-      setAlert(true);
+      showAlert(ALERT_MESSAGE_UNKNOWN_MODE);
       return;
     }
     setInitialized(true);

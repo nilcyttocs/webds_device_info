@@ -15,7 +15,13 @@ import Typography from "@mui/material/Typography";
 
 import SynaLogo from "./SynaLogo";
 
-import { WIDTH, CHIP_WIDTH } from "./constants";
+import {
+  ALERT_MESSAGE_ENTER_BOOTLOADER,
+  ALERT_MESSAGE_RUN_APPLICATION_FW,
+  WIDTH,
+  CHIP_WIDTH,
+  PACKRAT_LINK
+} from "./constants";
 
 import { Canvas } from "./mui_extensions/Canvas";
 import { Content } from "./mui_extensions/Content";
@@ -30,14 +36,7 @@ import { requestAPI } from "../handler";
 
 const contentAttrs: ContentAttrs = getContentAttrs(WIDTH);
 
-const PACKRAT_LINK =
-  "https://packrat.synaptics.com/packrat/view.cgi?packrat_id=";
-
 let alertMessage = "";
-
-const alertMessageEnterBootloader = "Failed to enter bootloader mode.";
-
-const alertMessageRunApplicationFW = "Failed to run application firmware.";
 
 const toHex = (str: string): string => {
   let result = "";
@@ -83,6 +82,11 @@ export const Landing = (props: any): JSX.Element => {
   const [mode, setMode] = useState<string>("");
   const [partNumber, setPartNumber] = useState<string>("");
 
+  const showAlert = (message: string) => {
+    alertMessage = message;
+    setAlert(true);
+  };
+
   const modeTitle =
     mode.charAt(0).toUpperCase() + mode.slice(1) + " Information";
 
@@ -92,8 +96,7 @@ export const Landing = (props: any): JSX.Element => {
         await enterBootloader();
       } catch (error) {
         console.error(error);
-        alertMessage = alertMessageEnterBootloader;
-        setAlert(true);
+        showAlert(ALERT_MESSAGE_ENTER_BOOTLOADER);
         return;
       }
     } else if (props.identify.mode === "bootloader") {
@@ -101,8 +104,7 @@ export const Landing = (props: any): JSX.Element => {
         await runApplicationFW();
       } catch (error) {
         console.error(error);
-        alertMessage = alertMessageRunApplicationFW;
-        setAlert(true);
+        showAlert(ALERT_MESSAGE_RUN_APPLICATION_FW);
         return;
       }
     }
