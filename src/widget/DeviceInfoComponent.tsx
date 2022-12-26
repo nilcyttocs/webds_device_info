@@ -8,6 +8,8 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import Landing from "./Landing";
 
+import { webdsService } from "./local_exports";
+
 import {
   ALERT_MESSAGE_IDENTIFY,
   ALERT_MESSAGE_APP_INFO,
@@ -70,6 +72,8 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
   const [identify, setIdentify] = useState<any>({});
   const [modeInfo, setModeInfo] = useState<any>({});
 
+  const webdsTheme = webdsService.ui.getWebDSTheme();
+
   const showAlert = (message: string) => {
     alertMessage = message;
     setAlert(true);
@@ -117,8 +121,6 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
     getData();
   }, []);
 
-  const webdsTheme = props.service.ui.getWebDSTheme();
-
   return (
     <>
       <ThemeProvider theme={webdsTheme}>
@@ -137,7 +139,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
               identify={identify}
               modeInfo={modeInfo}
               getData={getData}
-              external={props.service.pinormos.isExternal()}
+              external={webdsService.pinormos.isExternal()}
             />
           )}
         </div>

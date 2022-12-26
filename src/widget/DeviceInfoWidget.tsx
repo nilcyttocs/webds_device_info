@@ -6,6 +6,8 @@ import { WebDSService } from "@webds/service";
 
 import DeviceInfoComponent from "./DeviceInfoComponent";
 
+export let webdsService: WebDSService;
+
 export class DeviceInfoWidget extends ReactWidget {
   id: string;
   service: WebDSService;
@@ -17,9 +19,10 @@ export class DeviceInfoWidget extends ReactWidget {
   }
 
   render(): JSX.Element {
+    webdsService = this.service;
     return (
       <div id={this.id + "_component"}>
-        <DeviceInfoComponent service={this.service} />
+        <DeviceInfoComponent />
       </div>
     );
   }
