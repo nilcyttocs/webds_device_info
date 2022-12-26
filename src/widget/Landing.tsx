@@ -32,7 +32,7 @@ import {
   getContentAttrs
 } from "./mui_extensions/constants";
 
-import { requestAPI } from "../handler";
+import { requestAPI } from "./local_exports";
 
 const contentAttrs: ContentAttrs = getContentAttrs(WIDTH);
 
