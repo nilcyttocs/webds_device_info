@@ -13,7 +13,6 @@ export class DeviceInfoWidget extends ReactWidget {
   }
 
   render(): JSX.Element {
-    webdsService = this.service;
     return (
       <div id={this.id + "_component"}>
         <DeviceInfoComponent />
