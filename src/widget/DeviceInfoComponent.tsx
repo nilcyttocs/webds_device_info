@@ -1,66 +1,62 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import Alert from "@mui/material/Alert";
-
-import CircularProgress from "@mui/material/CircularProgress";
-
-import { ThemeProvider } from "@mui/material/styles";
-
-import Landing from "./Landing";
-
-import { requestAPI, webdsService } from "./local_exports";
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+import { ThemeProvider } from '@mui/material/styles';
 
 import {
-  ALERT_MESSAGE_IDENTIFY,
   ALERT_MESSAGE_APP_INFO,
   ALERT_MESSAGE_BOOT_INFO,
+  ALERT_MESSAGE_IDENTIFY,
   ALERT_MESSAGE_UNKNOWN_MODE
-} from "./constants";
+} from './constants';
+import Landing from './Landing';
+import { requestAPI, webdsService } from './local_exports';
 
-let alertMessage = "";
+let alertMessage = '';
 
 const getIdentify = async (): Promise<any> => {
   const dataToSend: any = {
-    command: "identify"
+    command: 'identify'
   };
   try {
-    return await requestAPI<any>("command", {
+    return await requestAPI<any>('command', {
       body: JSON.stringify(dataToSend),
-      method: "POST"
+      method: 'POST'
     });
   } catch (error) {
     console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
-    return Promise.reject("Failed to get Identify report");
+    return Promise.reject('Failed to get Identify report');
   }
 };
 
 const getAppInfo = async (): Promise<any> => {
   const dataToSend: any = {
-    command: "getAppInfo"
+    command: 'getAppInfo'
   };
   try {
-    return await requestAPI<any>("command", {
+    return await requestAPI<any>('command', {
       body: JSON.stringify(dataToSend),
-      method: "POST"
+      method: 'POST'
     });
   } catch (error) {
     console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
-    return Promise.reject("Failed to get Application Info");
+    return Promise.reject('Failed to get Application Info');
   }
 };
 
 const getBootInfo = async (): Promise<any> => {
   const dataToSend: any = {
-    command: "getBootInfo"
+    command: 'getBootInfo'
   };
   try {
-    return await requestAPI<any>("command", {
+    return await requestAPI<any>('command', {
       body: JSON.stringify(dataToSend),
-      method: "POST"
+      method: 'POST'
     });
   } catch (error) {
     console.error(`Error - POST /webds/command\n${dataToSend}\n${error}`);
-    return Promise.reject("Failed to get Bootloader Info");
+    return Promise.reject('Failed to get Bootloader Info');
   }
 };
 
@@ -89,7 +85,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
       showAlert(ALERT_MESSAGE_IDENTIFY);
       return;
     }
-    if (identifyReport.mode === "application") {
+    if (identifyReport.mode === 'application') {
       try {
         const info = await getAppInfo();
         setModeInfo(info);
@@ -98,7 +94,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
         showAlert(ALERT_MESSAGE_APP_INFO);
         return;
       }
-    } else if (identifyReport.mode === "bootloader") {
+    } else if (identifyReport.mode === 'bootloader') {
       try {
         const info = await getBootInfo();
         setModeInfo(info);
@@ -108,7 +104,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
         return;
       }
     } else {
-      console.error("Unknown firmware mode");
+      console.error('Unknown firmware mode');
       showAlert(ALERT_MESSAGE_UNKNOWN_MODE);
       return;
     }
@@ -127,7 +123,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
             <Alert
               severity="error"
               onClose={() => setAlert(false)}
-              sx={{ whiteSpace: "pre-wrap" }}
+              sx={{ whiteSpace: 'pre-wrap' }}
             >
               {alertMessage}
             </Alert>
@@ -144,10 +140,10 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
         {!initialized && (
           <div
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)"
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
             }}
           >
             <CircularProgress color="primary" />

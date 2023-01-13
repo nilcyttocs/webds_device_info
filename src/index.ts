@@ -2,24 +2,20 @@ import {
   ILayoutRestorer,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
-} from "@jupyterlab/application";
+} from '@jupyterlab/application';
+import { WidgetTracker } from '@jupyterlab/apputils';
+import { ILauncher } from '@jupyterlab/launcher';
+import { WebDSService, WebDSWidget } from '@webds/service';
 
-import { WidgetTracker } from "@jupyterlab/apputils";
-
-import { ILauncher } from "@jupyterlab/launcher";
-
-import { WebDSService, WebDSWidget } from "@webds/service";
-
-import { deviceInfoIcon } from "./icons";
-
-import DeviceInfoWidget from "./widget/DeviceInfoWidget";
+import { deviceInfoIcon } from './icons';
+import DeviceInfoWidget from './widget/DeviceInfoWidget';
 
 namespace Attributes {
-  export const command = "webds_device_info:open";
-  export const id = "webds_device_info_widget";
-  export const label = "Device Info";
-  export const caption = "Device Info";
-  export const category = "Touch - Assessment";
+  export const command = 'webds_device_info:open';
+  export const id = 'webds_device_info_widget';
+  export const label = 'Device Info';
+  export const caption = 'Device Info';
+  export const category = 'Touch - Assessment';
   export const rank = 60;
 }
 
@@ -29,7 +25,7 @@ export let webdsService: WebDSService;
  * Initialization data for the @webds/device_info extension.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: "@webds/device_info:plugin",
+  id: '@webds/device_info:plugin',
   autoStart: true,
   requires: [ILauncher, ILayoutRestorer, WebDSService],
   activate: (
@@ -38,7 +34,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     restorer: ILayoutRestorer,
     service: WebDSService
   ) => {
-    console.log("JupyterLab extension @webds/device_info is activated!");
+    console.log('JupyterLab extension @webds/device_info is activated!');
 
     webdsService = service;
 
@@ -49,7 +45,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       label: Attributes.label,
       caption: Attributes.caption,
       icon: (args: { [x: string]: any }) => {
-        return args["isLauncher"] ? deviceInfoIcon : undefined;
+        return args['isLauncher'] ? deviceInfoIcon : undefined;
       },
       execute: () => {
         if (!widget || widget.isDisposed) {
@@ -63,7 +59,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
         if (!tracker.has(widget)) tracker.add(widget);
 
-        if (!widget.isAttached) shell.add(widget, "main");
+        if (!widget.isAttached) shell.add(widget, 'main');
 
         shell.activateById(widget.id);
       }
