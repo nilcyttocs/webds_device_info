@@ -1,6 +1,6 @@
 {
   "name": "@webds/device_info",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "webds_device_info",
   "keywords": [
     "jupyter",
