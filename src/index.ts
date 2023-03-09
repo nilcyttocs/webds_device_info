@@ -15,7 +15,7 @@ namespace Attributes {
   export const id = 'webds_device_info_widget';
   export const label = 'Device Info';
   export const caption = 'Device Info';
-  export const category = 'Touch - Assessment';
+  export const category = 'Device - Assessment';
   export const rank = 10;
 }
 
