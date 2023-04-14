@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -29,8 +28,6 @@ import { Controls } from './mui_extensions/Controls';
 import SynaLogo from './SynaLogo';
 
 const contentAttrs: ContentAttrs = getContentAttrs(WIDTH);
-
-let alertMessage = '';
 
 const toHex = (str: string): string => {
   let result = '';
@@ -72,14 +69,8 @@ const runApplicationFW = async (): Promise<any> => {
 };
 
 export const Landing = (props: any): JSX.Element => {
-  const [alert, setAlert] = useState<boolean>(false);
   const [mode, setMode] = useState<string>('');
   const [partNumber, setPartNumber] = useState<string>('');
-
-  const showAlert = (message: string) => {
-    alertMessage = message;
-    setAlert(true);
-  };
 
   const modeTitle =
     mode.charAt(0).toUpperCase() + mode.slice(1) + ' Information';
@@ -90,7 +81,7 @@ export const Landing = (props: any): JSX.Element => {
         await enterBootloader();
       } catch (error) {
         console.error(error);
-        showAlert(ALERT_MESSAGE_ENTER_BOOTLOADER);
+        props.setAlert(ALERT_MESSAGE_ENTER_BOOTLOADER);
         return;
       }
     } else if (props.identify.mode === 'bootloader') {
@@ -98,7 +89,7 @@ export const Landing = (props: any): JSX.Element => {
         await runApplicationFW();
       } catch (error) {
         console.error(error);
-        showAlert(ALERT_MESSAGE_RUN_APPLICATION_FW);
+        props.setAlert(ALERT_MESSAGE_RUN_APPLICATION_FW);
         return;
       }
     }
@@ -200,144 +191,133 @@ export const Landing = (props: any): JSX.Element => {
   }, [props.identify]);
 
   return (
-    <>
-      {alert ? (
-        <Alert
-          severity="error"
-          onClose={() => setAlert(false)}
-          sx={{ whiteSpace: 'pre-wrap' }}
-        >
-          {alertMessage}
-        </Alert>
-      ) : null}
-      <Canvas title={modeTitle} width={WIDTH}>
-        <Content>
-          <Stack
-            spacing={contentAttrs.PANEL_SPACING}
-            direction="row"
-            divider={
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{
-                  minHeight:
-                    CANVAS_ATTRS.MIN_HEIGHT_CONTENT -
-                    CANVAS_ATTRS.PADDING * 2 +
-                    'px'
-                }}
-              />
-            }
-          >
-            <div
-              style={{
-                width: contentAttrs.PANEL_WIDTH + 'px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
+    <Canvas title={modeTitle} width={WIDTH}>
+      <Content>
+        <Stack
+          spacing={contentAttrs.PANEL_SPACING}
+          direction="row"
+          divider={
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                minHeight:
+                  CANVAS_ATTRS.MIN_HEIGHT_CONTENT -
+                  CANVAS_ATTRS.PADDING * 2 +
+                  'px'
               }}
-            >
-              <Stack spacing={2} direction="column" alignItems="left">
-                <div
-                  style={{
-                    width: CHIP_WIDTH + 'px',
-                    height: CHIP_WIDTH + 'px',
-                    position: 'relative'
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      border: 1,
-                      borderRadius: 3,
-                      borderColor: 'gray',
-                      backgroundColor: 'black'
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '35%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)'
-                    }}
-                  >
-                    {SynaLogo}
-                  </div>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '75%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)'
-                    }}
-                  >
-                    <Typography variant="h5" sx={{ color: 'white' }}>
-                      {partNumber}
-                    </Typography>
-                  </div>
-                </div>
-                <List>{generateIdentifyData()}</List>
-              </Stack>
-            </div>
-            <div style={{ width: contentAttrs.PANEL_WIDTH + 'px' }}>
-              <List
-                sx={{
-                  padding: '0px',
-                  '& .MuiListItemText-root': {
-                    marginTop: '0px'
-                  }
+            />
+          }
+        >
+          <div
+            style={{
+              width: contentAttrs.PANEL_WIDTH + 'px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}
+          >
+            <Stack spacing={2} direction="column" alignItems="left">
+              <div
+                style={{
+                  width: CHIP_WIDTH + 'px',
+                  height: CHIP_WIDTH + 'px',
+                  position: 'relative'
                 }}
               >
-                {generateModeInfoData()}
-              </List>
-            </div>
-          </Stack>
-        </Content>
-        <Controls
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <Button onClick={() => props.getData()} sx={{ width: '150px' }}>
-            Refresh
-          </Button>
-          {!props.external && (
-            <Button
-              variant="text"
-              onClick={() => handlePackratButtonClick()}
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    border: 1,
+                    borderRadius: 3,
+                    borderColor: 'gray',
+                    backgroundColor: 'black'
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '35%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                >
+                  {SynaLogo}
+                </div>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '75%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                >
+                  <Typography variant="h5" sx={{ color: 'white' }}>
+                    {partNumber}
+                  </Typography>
+                </div>
+              </div>
+              <List>{generateIdentifyData()}</List>
+            </Stack>
+          </div>
+          <div style={{ width: contentAttrs.PANEL_WIDTH + 'px' }}>
+            <List
               sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '24px',
-                transform: 'translate(0%, -50%)'
+                padding: '0px',
+                '& .MuiListItemText-root': {
+                  marginTop: '0px'
+                }
               }}
             >
-              <Typography variant="underline">Packrat</Typography>
-            </Button>
-          )}
+              {generateModeInfoData()}
+            </List>
+          </div>
+        </Stack>
+      </Content>
+      <Controls
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Button onClick={() => props.getData()} sx={{ width: '150px' }}>
+          Refresh
+        </Button>
+        {!props.external && (
           <Button
             variant="text"
-            onClick={() => handleModeButtonClick()}
+            onClick={() => handlePackratButtonClick()}
             sx={{
               position: 'absolute',
               top: '50%',
-              right: '24px',
+              left: '24px',
               transform: 'translate(0%, -50%)'
             }}
           >
-            {mode === 'application' ? (
-              <Typography variant="underline">Bootloader Mode</Typography>
-            ) : (
-              <Typography variant="underline">Application Mode</Typography>
-            )}
+            <Typography variant="underline">Packrat</Typography>
           </Button>
-        </Controls>
-      </Canvas>
-    </>
+        )}
+        <Button
+          variant="text"
+          onClick={() => handleModeButtonClick()}
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            right: '24px',
+            transform: 'translate(0%, -50%)'
+          }}
+        >
+          {mode === 'application' ? (
+            <Typography variant="underline">Bootloader Mode</Typography>
+          ) : (
+            <Typography variant="underline">Application Mode</Typography>
+          )}
+        </Button>
+      </Controls>
+    </Canvas>
   );
 };
 

@@ -13,8 +13,6 @@ import {
 import Landing from './Landing';
 import { requestAPI, webdsService } from './local_exports';
 
-let alertMessage = '';
-
 const getIdentify = async (): Promise<any> => {
   const dataToSend: any = {
     command: 'identify'
@@ -62,19 +60,13 @@ const getBootInfo = async (): Promise<any> => {
 
 export const DeviceInfoComponent = (props: any): JSX.Element => {
   const [initialized, setInitialized] = useState<boolean>(false);
-  const [alert, setAlert] = useState<boolean>(false);
+  const [alert, setAlert] = useState<string | undefined>(undefined);
   const [identify, setIdentify] = useState<any>({});
   const [modeInfo, setModeInfo] = useState<any>({});
 
   const webdsTheme = webdsService.ui.getWebDSTheme();
 
-  const showAlert = (message: string) => {
-    alertMessage = message;
-    setAlert(true);
-  };
-
   const getData = async () => {
-    setAlert(false);
     setInitialized(false);
     let identifyReport: any;
     try {
@@ -82,7 +74,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
       setIdentify(identifyReport);
     } catch (error) {
       console.error(error);
-      showAlert(ALERT_MESSAGE_IDENTIFY);
+      setAlert(ALERT_MESSAGE_IDENTIFY);
       return;
     }
     if (identifyReport.mode === 'application') {
@@ -91,7 +83,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
         setModeInfo(info);
       } catch (error) {
         console.error(error);
-        showAlert(ALERT_MESSAGE_APP_INFO);
+        setAlert(ALERT_MESSAGE_APP_INFO);
         return;
       }
     } else if (identifyReport.mode === 'bootloader') {
@@ -100,12 +92,12 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
         setModeInfo(info);
       } catch (error) {
         console.error(error);
-        showAlert(ALERT_MESSAGE_BOOT_INFO);
+        setAlert(ALERT_MESSAGE_BOOT_INFO);
         return;
       }
     } else {
       console.error('Unknown firmware mode');
-      showAlert(ALERT_MESSAGE_UNKNOWN_MODE);
+      setAlert(ALERT_MESSAGE_UNKNOWN_MODE);
       return;
     }
     setInitialized(true);
@@ -119,17 +111,18 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
     <>
       <ThemeProvider theme={webdsTheme}>
         <div className="jp-webds-widget-body">
-          {alert && (
+          {alert !== undefined && (
             <Alert
               severity="error"
-              onClose={() => setAlert(false)}
+              onClose={() => setAlert(undefined)}
               sx={{ whiteSpace: 'pre-wrap' }}
             >
-              {alertMessage}
+              {alert}
             </Alert>
           )}
           {initialized && (
             <Landing
+              setAlert={setAlert}
               identify={identify}
               modeInfo={modeInfo}
               getData={getData}
