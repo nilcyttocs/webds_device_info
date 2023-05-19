@@ -70,7 +70,6 @@ const runApplicationFW = async (): Promise<any> => {
 
 export const Landing = (props: any): JSX.Element => {
   const [mode, setMode] = useState<string>('');
-  const [partNumber, setPartNumber] = useState<string>('');
 
   const modeTitle =
     mode.charAt(0).toUpperCase() + mode.slice(1) + ' Information';
@@ -116,9 +115,7 @@ export const Landing = (props: any): JSX.Element => {
     output.push(
       <ListItem key="partNumber" sx={{ padding: '1px 0px' }}>
         <ListItemText
-          primary={
-            'Part Number: ' + props.identify.partNumber.replace(/\0/g, '')
-          }
+          primary={'Part Number: ' + props.partNumber}
           primaryTypographyProps={{
             variant: 'body1',
             sx: { fontWeight: 'bold' }
@@ -181,12 +178,6 @@ export const Landing = (props: any): JSX.Element => {
   };
 
   useEffect(() => {
-    const partNumber = props.identify.partNumber
-      .toUpperCase()
-      .replace(/\0/g, '')
-      .split('-')[0]
-      .split(' ')[0];
-    setPartNumber(partNumber);
     setMode(props.identify.mode);
   }, [props.identify]);
 
@@ -254,7 +245,7 @@ export const Landing = (props: any): JSX.Element => {
                   }}
                 >
                   <Typography variant="h5" sx={{ color: 'white' }}>
-                    {partNumber}
+                    {props.partNumber.split('-')[0]}
                   </Typography>
                 </div>
               </div>

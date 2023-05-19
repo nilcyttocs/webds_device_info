@@ -7,6 +7,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import {
   ALERT_MESSAGE_APP_INFO,
   ALERT_MESSAGE_BOOT_INFO,
+  ALERT_MESSAGE_DEVICE_PART_NUMBER,
   ALERT_MESSAGE_IDENTIFY,
   ALERT_MESSAGE_UNKNOWN_MODE
 } from './constants';
@@ -63,6 +64,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
   const [alert, setAlert] = useState<string | undefined>(undefined);
   const [identify, setIdentify] = useState<any>({});
   const [modeInfo, setModeInfo] = useState<any>({});
+  const [partNumber, setPartNumber] = useState<string>('');
 
   const webdsTheme = webdsService.ui.getWebDSTheme();
 
@@ -100,6 +102,14 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
       setAlert(ALERT_MESSAGE_UNKNOWN_MODE);
       return;
     }
+    try {
+      const pn = await webdsService.touchcomm.getPartNumber();
+      setPartNumber(pn);
+    } catch (error) {
+      console.error(error);
+      setAlert(ALERT_MESSAGE_DEVICE_PART_NUMBER);
+      return;
+    }
     setInitialized(true);
   };
 
@@ -125,6 +135,7 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
               setAlert={setAlert}
               identify={identify}
               modeInfo={modeInfo}
+              partNumber={partNumber}
               getData={getData}
               external={webdsService.pinormos.isExternal()}
             />

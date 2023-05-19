@@ -9,6 +9,9 @@ export const ALERT_MESSAGE_BOOT_INFO =
 
 export const ALERT_MESSAGE_UNKNOWN_MODE = 'Unknown firmware mode.';
 
+export const ALERT_MESSAGE_DEVICE_PART_NUMBER =
+  'Failed to read device part number.';
+
 export const ALERT_MESSAGE_ENTER_BOOTLOADER =
   'Failed to enter bootloader mode.';
 
