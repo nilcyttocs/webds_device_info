@@ -97,6 +97,8 @@ export const DeviceInfoComponent = (props: any): JSX.Element => {
         setAlert(ALERT_MESSAGE_BOOT_INFO);
         return;
       }
+    } else if (identifyReport.mode === 'rombootloader') {
+      setModeInfo({});
     } else {
       console.error('Unknown firmware mode');
       setAlert(ALERT_MESSAGE_UNKNOWN_MODE);
