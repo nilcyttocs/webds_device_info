@@ -46,14 +46,27 @@ const camelCaseToTitleCase = (camel: string): string => {
   return title.charAt(0).toUpperCase() + title.slice(1);
 };
 
-const enterBootloader = async (): Promise<any> => {
-  try {
-    return await requestAPI<any>('command?query=enterBootloaderMode');
-  } catch (error) {
-    console.error(
-      `Error - GET /webds/command?query=enterBootloaderMode\n${error}`
-    );
-    return Promise.reject('Failed to enter bootloader mode');
+const enterBootloader = async (romboot: boolean): Promise<any> => {
+  if (romboot) {
+    try {
+      return await requestAPI<any>(
+        'command?query=enterDisplayRomBootloaderMode'
+      );
+    } catch (error) {
+      console.error(
+        `Error - GET /webds/command?query=enterDisplayRomBootloaderMode\n${error}`
+      );
+      return Promise.reject('Failed to enter bootloader mode');
+    }
+  } else {
+    try {
+      return await requestAPI<any>('command?query=enterBootloaderMode');
+    } catch (error) {
+      console.error(
+        `Error - GET /webds/command?query=enterBootloaderMode\n${error}`
+      );
+      return Promise.reject('Failed to enter bootloader mode');
+    }
   }
 };
 
@@ -77,13 +90,16 @@ export const Landing = (props: any): JSX.Element => {
   const handleModeButtonClick = async () => {
     if (mode === 'application') {
       try {
-        await enterBootloader();
+        await enterBootloader(props.identify.partNumber.startsWith('SB'));
       } catch (error) {
         console.error(error);
         props.setAlert(ALERT_MESSAGE_ENTER_BOOTLOADER);
         return;
       }
-    } else if (props.identify.mode === 'bootloader') {
+    } else if (
+      props.identify.mode === 'bootloader' ||
+      props.identify.mode === 'rombootloader'
+    ) {
       try {
         await runApplicationFW();
       } catch (error) {
